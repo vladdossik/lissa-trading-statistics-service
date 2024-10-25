@@ -2,6 +2,7 @@ package lissa.trading.statisticsService.service.excel.user;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import lissa.trading.statisticsService.exceptions.ExcelCreatingException;
 import lissa.trading.statisticsService.model.dto.UserReportDto;
 import lissa.trading.statisticsService.service.excel.ExcelService;
 import lissa.trading.statisticsService.service.userReport.UserReportService;
@@ -13,14 +14,18 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
-import static lissa.trading.statisticsService.utils.UserExcelMappingUtil.*;
+import static lissa.trading.statisticsService.utils.UserExportExcelColumns.COLUMNS;
+import static lissa.trading.statisticsService.utils.UserExportExcelColumns.FORMATTER;
 
 @Service
 @RequiredArgsConstructor
@@ -30,34 +35,34 @@ public class ExcelUserService implements ExcelService {
     private final UserReportService userReportService;
 
     @Override
+    @Transactional(readOnly = true)
     public void generateExcelReport(HttpServletResponse response) {
+        String filename = "Отчет по пользователям. Дата: "
+                + FORMATTER.format(LocalDateTime.now()) + ".xlsx";
+        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replace("+", "%20");
         List<UserReportDto> users = userReportService.getUsersForReport();
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Users report " + TODAY_DATE);
-
-        createHeaders(sheet);
-
         int rowCount = 1;
-        for (UserReportDto user : users) {
-            Row row = sheet.createRow(rowCount++);
-            writeUserData(user, row);
-        }
+        Sheet sheet;
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition",
-                "attachment; filename=users_report " + TODAY_DATE + ".xlsx");
+        try (Workbook workbook = new SXSSFWorkbook();
+             ServletOutputStream outputStream = response.getOutputStream()) {
 
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            workbook.write(outputStream);
-        } catch (IOException e) {
-            log.error("Error writing excel report to output stream", e);
-        } finally {
-            try {
-                workbook.close();
-                log.info("Successfully generated excel report");
-            } catch (IOException e) {
-                log.error("Error closing workbook", e);
+            sheet = workbook.createSheet("Отчет по пользователям");
+            createHeaders(sheet);
+
+            for (UserReportDto user : users) {
+                Row row = sheet.createRow(rowCount++);
+                writeUserData(user, row);
             }
+            log.info("Successfully generated user data");
+
+            response.setHeader("Content-Disposition",
+                    "attachment; filename*=UTF-8''" + encodedFilename);
+            workbook.write(outputStream);
+            log.info("Successfully generated user report");
+        } catch (IOException e) {
+            throw new ExcelCreatingException("Error creating excel report");
         }
     }
 
@@ -68,9 +73,9 @@ public class ExcelUserService implements ExcelService {
         font.setBold(true);
         cellStyle.setFont(font);
 
-        for (int i = 0; i < COLUMN_NAMES.size(); i++) {
+        for (int i = 0; i < COLUMNS.size(); i++) {
             Cell cell = headersRow.createCell(i);
-            cell.setCellValue(COLUMN_NAMES.get(i));
+            cell.setCellValue(COLUMNS.get(i).getColumnName());
             cell.setCellStyle(cellStyle);
         }
         log.info("Successfully generated headers");
@@ -78,22 +83,16 @@ public class ExcelUserService implements ExcelService {
 
     private void writeUserData(UserReportDto user, Row row) {
         Cell cell;
-        for (int i = 0; i < GETTERS_LIST.size(); i++) {
-            Object value = GETTERS_LIST.get(i).apply(user);
+        for (int i = 0; i < COLUMNS.size(); i++) {
+            Object value = COLUMNS.get(i).getColumnValue(user);
             cell = row.createCell(i);
 
-            if (value instanceof Double) {
-                cell.setCellValue((Double) value);
-            } else if (value instanceof String) {
-                cell.setCellValue((String) value);
-            } else if (value instanceof Integer) {
-                cell.setCellValue((Integer) value);
-            } else if (value instanceof Boolean) {
-                cell.setCellValue((Boolean) value);
-            } else if (value instanceof UUID) {
-                cell.setCellValue((value.toString()));
+            switch (value) {
+                case Integer integer -> cell.setCellValue(integer);
+                case Double d -> cell.setCellValue(d);
+                case Boolean b -> cell.setCellValue(b);
+                default -> cell.setCellValue(value.toString());
             }
         }
-        log.info("Successfully generated user data");
     }
 }

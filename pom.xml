@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
+            <version>1.18.34</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -136,7 +136,7 @@
                         <annotationProcessorPath>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.26</version>
+                            <version>1.18.34</version>
                         </annotationProcessorPath>
                         <annotationProcessorPath>
                             <groupId>org.mapstruct</groupId>
@@ -144,6 +144,9 @@
                             <version>1.6.0</version>
                         </annotationProcessorPath>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

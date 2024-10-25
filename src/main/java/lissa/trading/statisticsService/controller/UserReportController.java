@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("users/report")
@@ -17,7 +15,7 @@ public class UserReportController {
     private final ExcelService excelService;
 
     @GetMapping
-    public void getUsersReport(HttpServletResponse response) throws IOException {
+    public void getUsersReport(HttpServletResponse response) {
         excelService.generateExcelReport(response);
     }
 }
