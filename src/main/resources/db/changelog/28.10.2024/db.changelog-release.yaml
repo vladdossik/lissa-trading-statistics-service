@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: "28.10.2024/db.changelog-release.yaml"
+      file: "01_create_users_table.yaml"
       relativeToChangelogFile: true

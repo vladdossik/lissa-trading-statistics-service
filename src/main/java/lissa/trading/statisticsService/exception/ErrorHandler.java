@@ -1,4 +1,4 @@
-package lissa.trading.statisticsService.exceptions;
+package lissa.trading.statisticsService.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

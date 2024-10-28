@@ -1,4 +1,4 @@
-package lissa.trading.statisticsService.exceptions;
+package lissa.trading.statisticsService.exception;
 
 public class ExcelCreatingException extends RuntimeException {
 

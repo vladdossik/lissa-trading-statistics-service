@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: create-users-table
-      author: mamaiwyd
+      author: Sasha Tyutyaev
       preConditions:
         - onFail: MARK_RAN
           not:

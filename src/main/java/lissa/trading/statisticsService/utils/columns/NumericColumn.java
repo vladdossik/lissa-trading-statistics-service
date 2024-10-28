@@ -7,8 +7,8 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class NumericColumn<T> implements ExportColumn<T, Number> {
 
-    private String columnName;
-    private Function<T, Number> columnValue;
+    private final String columnName;
+    private final Function<T, Number> columnValue;
 
     @Override
     public String getColumnName() {
