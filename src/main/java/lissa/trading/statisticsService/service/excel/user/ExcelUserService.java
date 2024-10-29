@@ -4,7 +4,7 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.exception.ExcelCreatingException;
 import lissa.trading.statisticsService.model.dto.UserReportDto;
-import lissa.trading.statisticsService.service.excel.ExcelService;
+import lissa.trading.statisticsService.service.excel.ReportService;
 import lissa.trading.statisticsService.service.userReport.UserReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static lissa.trading.statisticsService.utils.UserExportExcelColumns.COLUMNS;
 import static lissa.trading.statisticsService.utils.UserExportExcelColumns.FORMATTER;
@@ -29,17 +30,14 @@ import static lissa.trading.statisticsService.utils.UserExportExcelColumns.FORMA
 @Service("ExcelUserService")
 @RequiredArgsConstructor
 @Slf4j
-public class ExcelUserService implements ExcelService {
+public class ExcelUserService implements ReportService {
 
     private final UserReportService userReportService;
 
     @Override
     @Transactional(readOnly = true)
     public void generateExcelReport(HttpServletResponse response) {
-        String filename = "Отчет по пользователям. Дата: "
-                + FORMATTER.format(LocalDateTime.now()) + ".xlsx";
-        String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
-                .replace("+", "%20");
+        String filename = createEncodedFilename("Отчет по пользователям. Дата: ");
         List<UserReportDto> users = userReportService.getUsersForReport();
 
         try (Workbook workbook = new SXSSFWorkbook();
@@ -55,12 +53,18 @@ public class ExcelUserService implements ExcelService {
             log.info("Successfully generated user data");
 
             response.setHeader("Content-Disposition",
-                    "attachment; filename*=UTF-8''" + encodedFilename);
+                    "attachment; filename*=UTF-8''" + filename);
             workbook.write(outputStream);
             log.info("Successfully generated user report");
         } catch (Exception e) {
             throw new ExcelCreatingException("Error creating excel report");
         }
+    }
+
+    private String createEncodedFilename(String filename) {
+        String filenameWithDate = filename + FORMATTER.format(LocalDateTime.now()) + ".xlsx";
+        return URLEncoder.encode(filenameWithDate, StandardCharsets.UTF_8)
+                .replace("+", "%20");
     }
 
     private void createHeaders(Sheet sheet) {
@@ -84,7 +88,7 @@ public class ExcelUserService implements ExcelService {
             Object value = COLUMNS.get(i).getColumnValue(user);
             cell = row.createCell(i);
 
-            if (value == null) {
+            if (Objects.isNull(value)) {
                 cell.setCellValue("");
             } else {
                 switch (value) {

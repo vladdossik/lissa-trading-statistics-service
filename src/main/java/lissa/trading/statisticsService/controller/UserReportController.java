@@ -1,25 +1,23 @@
 package lissa.trading.statisticsService.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lissa.trading.statisticsService.service.excel.ExcelService;
-import lissa.trading.statisticsService.service.excel.user.ExcelUserService;
+import lissa.trading.statisticsService.service.excel.ReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("v1/api/users/report")
+@RequestMapping("v1/api")
+@RequiredArgsConstructor
 public class UserReportController {
 
-    private final ExcelService excelService;
+    @Qualifier("ExcelUserService")
+    private final ReportService reportService;
 
-    public UserReportController(@Qualifier("ExcelUserService") ExcelUserService excelUserService) {
-        this.excelService = excelUserService;
-    }
-
-    @GetMapping
+    @GetMapping("users/report")
     public void getUsersReport(HttpServletResponse response) {
-        excelService.generateExcelReport(response);
+        reportService.generateExcelReport(response);
     }
 }
