@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("v1")
+@RequestMapping("v1/reports")
 @RequiredArgsConstructor
-public class UserReportController {
+public class ReportController {
 
     @Qualifier("excelUserService")
-    private final ReportService reportService;
+    private final ReportService userReportService;
 
-    @GetMapping("users/report")
+    @GetMapping("user")
     public void getUsersReport(HttpServletResponse response) {
-        reportService.generateExcelReport(response);
+        userReportService.generateExcelReport(response);
     }
 }
