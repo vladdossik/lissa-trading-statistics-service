@@ -27,7 +27,7 @@ import java.util.Objects;
 import static lissa.trading.statisticsService.utils.UserExportExcelColumns.COLUMNS;
 import static lissa.trading.statisticsService.utils.UserExportExcelColumns.FORMATTER;
 
-@Service("ExcelUserService")
+@Service("excelUserService")
 @RequiredArgsConstructor
 @Slf4j
 public class ExcelUserService implements ReportService {

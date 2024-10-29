@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("v1/api")
+@RequestMapping("v1")
 @RequiredArgsConstructor
 public class UserReportController {
 
-    @Qualifier("ExcelUserService")
+    @Qualifier("excelUserService")
     private final ReportService reportService;
 
     @GetMapping("users/report")
