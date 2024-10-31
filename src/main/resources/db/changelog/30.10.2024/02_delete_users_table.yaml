@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: delete_users_table
+      author: Sasha Tyutyaev
+      changes:
+        - dropTable:
+            tableName: users

@@ -1,20 +1,22 @@
-package lissa.trading.statisticsService.model.dto;
+package lissa.trading.statisticsService.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class UserReportDto {
-    private UUID externalId;
+public class UserJson implements Serializable {
     private String firstName;
     private String lastName;
     private String telegramNickname;
@@ -30,4 +32,5 @@ public class UserReportDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssX")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedAt;
+
 }

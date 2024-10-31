@@ -16,4 +16,11 @@ public class ErrorHandler {
         log.error("Error creating excel file", e);
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
+        log.error("User is not found by external id");
+        return new ErrorResponse(e.getMessage());
+    }
 }

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - include:
-      file: "28.10.2024/db.changelog-release.yaml"
+      file: "02_delete_users_table.yaml"
       relativeToChangelogFile: true
   - include:
-      file: "30.10.2024/db.changelog-release.yaml"
+      file: "01_update_users_table.yaml"
       relativeToChangelogFile: true

@@ -1,18 +1,31 @@
+server:
+  port: 8085
+
 spring:
   application:
     name:
       statistics-Service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/statistics-service-test-db
+    url: jdbc:postgresql://localhost:5432/lissa-trading-db
     username: postgres
-    password: postgres
+    password: root-password-123
     driver-class-name: org.postgresql.Driver
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: statistics_service_db
 
   liquibase:
     enabled: true
+    default_schema: statistics_service_db

@@ -24,7 +24,6 @@ public class UserExportExcelColumns {
             new NumericColumn<>("Изменение в деньгах со вчерашнего дня",
                     dto -> dto.getMonetaryChangeSinceYesterday().doubleValue()),
             new NumericColumn<>("Количество аккаунтов", UserReportDto::getAccountCount),
-            new NumericColumn<>("Общий баланс", dto -> dto.getTotalBalance().doubleValue()),
-            new TextColumn<>("Премиум статус", UserReportDto::getPremStatus)
+            new NumericColumn<>("Общий баланс", dto -> dto.getTotalBalance().doubleValue())
     );
 }
