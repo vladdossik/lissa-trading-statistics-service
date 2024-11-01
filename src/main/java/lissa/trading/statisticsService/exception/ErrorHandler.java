@@ -20,7 +20,7 @@ public class ErrorHandler {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
-        log.error("User is not found by external id");
+        log.error("User is not found by external id {}", e.getExternalId());
         return new ErrorResponse(e.getMessage());
     }
 }

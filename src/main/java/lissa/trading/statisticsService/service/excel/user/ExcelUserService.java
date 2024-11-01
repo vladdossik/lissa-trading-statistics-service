@@ -57,7 +57,7 @@ public class ExcelUserService implements ReportService {
             workbook.write(outputStream);
             log.info("Successfully generated user report");
         } catch (Exception e) {
-            throw new ExcelCreatingException("Error creating excel report");
+            throw new ExcelCreatingException("Error creating excel report " + e.getMessage());
         }
     }
 

@@ -4,7 +4,7 @@ server:
 spring:
   application:
     name:
-      statistics-Service
+      statistics-service
   rabbitmq:
     host: localhost
     port: 5672
@@ -29,3 +29,8 @@ spring:
   liquibase:
     enabled: true
     default_schema: statistics_service_db
+
+integration:
+  rabbit:
+    user-service:
+      user-queue: user-stats-queue

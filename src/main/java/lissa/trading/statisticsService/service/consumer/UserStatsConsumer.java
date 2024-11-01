@@ -7,6 +7,7 @@ import lissa.trading.statisticsService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,9 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
 
     private final UserRepository userRepository;
 
-    @RabbitListener(queues = "all-users-stats-queue")
+    @RabbitListener(queues = "${integration.rabbit.user-service.user-queue}")
     @Transactional
-    public void receiveAllStats(List<UserReportDto> users) {
+    public void receiveUsersData(List<UserReportDto> users) {
         List<User> usersToSave = new ArrayList<>();
         for (UserReportDto user : users) {
             User existingUser = userRepository.findByExternalId(user.getExternalId());
@@ -33,20 +34,6 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
 
         userRepository.saveAll(usersToSave);
         log.info("Successfully received and saved {} users", usersToSave.size());
-    }
-
-    @RabbitListener(queues = "updated-user-stats-queue")
-    @Transactional
-    public void receiveStatAfterUpdate(UserReportDto user) {
-        User existingUser = userRepository.findByExternalId(user.getExternalId());
-        if (existingUser != null) {
-            log.info("Updating user stats for {}", user.getExternalId());
-            userRepository.save(updateUser(user, existingUser));
-        } else {
-            log.info("Creating new user stats for {}", user.getExternalId());
-            userRepository.save(createUser(user));
-        }
-        log.info("Successfully received user after update");
     }
 
     private User updateUser(UserReportDto user, User existingUser) {
