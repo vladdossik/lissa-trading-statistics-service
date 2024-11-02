@@ -7,12 +7,15 @@ import lissa.trading.statisticsService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,9 +27,23 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
     @RabbitListener(queues = "${integration.rabbit.user-service.user-queue}")
     @Transactional
     public void receiveUsersData(List<UserReportDto> users) {
+        if (CollectionUtils.isEmpty(users)) {
+            log.info("List of users is empty");
+            return;
+        }
+
+        List<UUID> externalIds = users.stream().
+                map(UserReportDto::getExternalId)
+                .toList();
+
+        List<User> existingUsers = userRepository.findAllByExternalIdIn(externalIds);
+
+        Map<UUID, User> existingUserMap = existingUsers.stream()
+                .collect(Collectors.toMap(User::getExternalId, user -> user));
+
         List<User> usersToSave = new ArrayList<>();
         for (UserReportDto user : users) {
-            User existingUser = userRepository.findByExternalId(user.getExternalId());
+            User existingUser = existingUserMap.get(user.getExternalId());
             User userToSave = existingUser != null ?
                     updateUser(user, existingUser) : createUser(user);
             usersToSave.add(userToSave);
