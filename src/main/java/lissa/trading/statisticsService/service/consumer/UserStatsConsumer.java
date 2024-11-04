@@ -4,6 +4,7 @@ import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.model.UserJson;
 import lissa.trading.statisticsService.model.dto.UserReportDto;
 import lissa.trading.statisticsService.repository.UserRepository;
+import lissa.trading.statisticsService.service.userReport.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @RabbitListener(queues = "${integration.rabbit.user-service.user-queue}")
     @Transactional
@@ -32,7 +33,7 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
             return;
         }
 
-        Map<UUID, User> existingUserMap = processUsers(users);
+        Map<UUID, User> existingUserMap = userService.processUsers(users);
 
         List<User> usersToSave = new ArrayList<>();
         for (UserReportDto user : users) {
@@ -44,16 +45,6 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
 
         userRepository.saveAll(usersToSave);
         log.info("Successfully received and saved {} users", usersToSave.size());
-    }
-
-    private Map<UUID, User> processUsers(List<UserReportDto> users) {
-        List<UUID> externalIds = users.stream().map(UserReportDto::getExternalId)
-                .toList();
-
-        List<User> existingUsers = userRepository.findAllByExternalIdIn(externalIds);
-
-        return existingUsers.stream()
-                .collect(Collectors.toMap(User::getExternalId, user -> user));
     }
 
     private User updateUser(UserReportDto user, User existingUser) {
