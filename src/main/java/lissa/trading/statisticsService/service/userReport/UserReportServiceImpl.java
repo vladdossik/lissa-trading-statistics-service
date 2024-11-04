@@ -23,6 +23,7 @@ public class UserReportServiceImpl implements UserReportService {
     public List<UserReportDto> getUsersForReport() {
         log.info("Getting users for report");
         return userRepository.findAll().stream()
-                .map(userMapper::toUserReportDto).toList();
+                .map(user -> userMapper.toUserReportDto(user, user.getUserJson()))
+                .toList();
     }
 }

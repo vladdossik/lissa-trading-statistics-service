@@ -32,14 +32,7 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
             return;
         }
 
-        List<UUID> externalIds = users.stream().
-                map(UserReportDto::getExternalId)
-                .toList();
-
-        List<User> existingUsers = userRepository.findAllByExternalIdIn(externalIds);
-
-        Map<UUID, User> existingUserMap = existingUsers.stream()
-                .collect(Collectors.toMap(User::getExternalId, user -> user));
+        Map<UUID, User> existingUserMap = processUsers(users);
 
         List<User> usersToSave = new ArrayList<>();
         for (UserReportDto user : users) {
@@ -51,6 +44,16 @@ public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
 
         userRepository.saveAll(usersToSave);
         log.info("Successfully received and saved {} users", usersToSave.size());
+    }
+
+    private Map<UUID, User> processUsers(List<UserReportDto> users) {
+        List<UUID> externalIds = users.stream().map(UserReportDto::getExternalId)
+                .toList();
+
+        List<User> existingUsers = userRepository.findAllByExternalIdIn(externalIds);
+
+        return existingUsers.stream()
+                .collect(Collectors.toMap(User::getExternalId, user -> user));
     }
 
     private User updateUser(UserReportDto user, User existingUser) {
