@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 30.10.2024_01
+      author: Sasha Tyutyaev
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: external_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_json
+                  type: jsonb
+                  constraints:
+                    nullable: false

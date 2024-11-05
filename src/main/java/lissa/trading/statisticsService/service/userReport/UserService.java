@@ -4,7 +4,9 @@ import lissa.trading.statisticsService.model.dto.UserReportDto;
 
 import java.util.List;
 
-public interface UserReportService {
+public interface UserService {
 
     List<UserReportDto> getUsersForReport();
+
+    void processUsers(List<UserReportDto> users);
 }
