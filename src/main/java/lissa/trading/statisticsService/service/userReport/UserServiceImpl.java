@@ -1,7 +1,6 @@
 package lissa.trading.statisticsService.service.userReport;
 
 import lissa.trading.statisticsService.model.User;
-import lissa.trading.statisticsService.model.UserJson;
 import lissa.trading.statisticsService.model.dto.UserReportDto;
 import lissa.trading.statisticsService.model.dto.mapper.UserMapper;
 import lissa.trading.statisticsService.repository.UserRepository;
@@ -48,38 +47,11 @@ public class UserServiceImpl implements UserService {
         for (UserReportDto user : users) {
             User existingUser = existingUserMap.get(user.getExternalId());
             User userToSave = existingUser != null ?
-                    updateUser(user, existingUser) : createUser(user);
+                    userMapper.updateUser(userMapper.toUserJson(user), existingUser) : userMapper.createUser(user, userMapper.toUserJson(user));
             usersToSave.add(userToSave);
         }
 
         userRepository.saveAll(usersToSave);
         log.info("Successfully received and saved {} users", usersToSave.size());
-    }
-
-    private User updateUser(UserReportDto user, User existingUser) {
-        existingUser.setUserJson(createUserJson(user));
-
-        return existingUser;
-    }
-
-    private User createUser(UserReportDto user) {
-        return User.builder()
-                .externalId(user.getExternalId())
-                .userJson(createUserJson(user))
-                .build();
-    }
-
-    private UserJson createUserJson(UserReportDto user) {
-        return UserJson.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .telegramNickname(user.getTelegramNickname())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .percentageChangeSinceYesterday(user.getPercentageChangeSinceYesterday())
-                .monetaryChangeSinceYesterday(user.getMonetaryChangeSinceYesterday())
-                .accountCount(user.getAccountCount())
-                .totalBalance(user.getTotalBalance())
-                .build();
     }
 }
