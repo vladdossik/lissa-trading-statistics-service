@@ -47,7 +47,8 @@ public class UserServiceImpl implements UserService {
         for (UserReportDto user : users) {
             User existingUser = existingUserMap.get(user.getExternalId());
             User userToSave = existingUser != null ?
-                    userMapper.updateUser(userMapper.toUserJson(user), existingUser) : userMapper.createUser(user, userMapper.toUserJson(user));
+                    userMapper.updateUser(userMapper.toUserJson(user), existingUser) :
+                    userMapper.createUser(user, userMapper.toUserJson(user));
             usersToSave.add(userToSave);
         }
 
