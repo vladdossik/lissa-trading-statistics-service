@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: delete_users_table
+      id: 30.10.2024_02
       author: Sasha Tyutyaev
       changes:
         - dropTable:

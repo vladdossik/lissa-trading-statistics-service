@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.exception.ExcelCreatingException;
 import lissa.trading.statisticsService.model.dto.UserReportDto;
 import lissa.trading.statisticsService.service.excel.ReportService;
-import lissa.trading.statisticsService.service.userReport.UserReportService;
+import lissa.trading.statisticsService.service.userReport.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,15 +30,15 @@ import static lissa.trading.statisticsService.utils.UserExportExcelColumns.FORMA
 @Service("excelUserService")
 @RequiredArgsConstructor
 @Slf4j
-public class ExcelUserService implements ReportService {
+public class ReportUserService implements ReportService {
 
-    private final UserReportService userReportService;
+    private final UserService userService;
 
     @Override
     @Transactional(readOnly = true)
     public void generateExcelReport(HttpServletResponse response) {
         String filename = createEncodedFilename("Отчет по пользователям. Дата: ");
-        List<UserReportDto> users = userReportService.getUsersForReport();
+        List<UserReportDto> users = userService.getUsersForReport();
 
         try (Workbook workbook = new SXSSFWorkbook();
              ServletOutputStream outputStream = response.getOutputStream()) {
@@ -57,7 +57,7 @@ public class ExcelUserService implements ReportService {
             workbook.write(outputStream);
             log.info("Successfully generated user report");
         } catch (Exception e) {
-            throw new ExcelCreatingException("Error creating excel report");
+            throw new ExcelCreatingException("Error creating excel report " + e.getMessage());
         }
     }
 

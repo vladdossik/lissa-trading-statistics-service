@@ -5,20 +5,19 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
 
-    @Bean
-    public Queue userStatsQueue() {
-        return new Queue("all-users-stats-queue", true);
-    }
+    @Value("${integration.rabbit.user-service.user-queue}")
+    private String userStatsQueue;
 
     @Bean
-    public Queue updatedUsersStatsQueue() {
-        return new Queue("updated-user-stats-queue", true);
+    public Queue userStatsQueue() {
+        return new Queue(userStatsQueue, true);
     }
 
     @Bean
@@ -33,5 +32,4 @@ public class RabbitConfig {
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-
 }

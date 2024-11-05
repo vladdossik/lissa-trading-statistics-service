@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-users-table
+      id: 28.10.2024_01
       author: Sasha Tyutyaev
       changes:
         - createTable:
