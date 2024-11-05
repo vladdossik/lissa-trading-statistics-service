@@ -57,14 +57,20 @@ public class UserServiceImpl implements UserService {
     }
 
     private User updateUser(UserReportDto user, User existingUser) {
-        existingUser.getUserJson().setFirstName(user.getFirstName());
-        existingUser.getUserJson().setLastName(user.getLastName());
-        existingUser.getUserJson().setTelegramNickname(user.getTelegramNickname());
+        existingUser.setUserJson(createUserJson(user));
+
         return existingUser;
     }
 
     private User createUser(UserReportDto user) {
-        UserJson userJson = UserJson.builder()
+        return User.builder()
+                .externalId(user.getExternalId())
+                .userJson(createUserJson(user))
+                .build();
+    }
+
+    private UserJson createUserJson(UserReportDto user) {
+        return UserJson.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .telegramNickname(user.getTelegramNickname())
@@ -74,11 +80,6 @@ public class UserServiceImpl implements UserService {
                 .monetaryChangeSinceYesterday(user.getMonetaryChangeSinceYesterday())
                 .accountCount(user.getAccountCount())
                 .totalBalance(user.getTotalBalance())
-                .build();
-
-        return User.builder()
-                .externalId(user.getExternalId())
-                .userJson(userJson)
                 .build();
     }
 }
