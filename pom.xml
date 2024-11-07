@@ -158,9 +158,6 @@
                             <version>1.6.0</version>
                         </annotationProcessorPath>
                     </annotationProcessorPaths>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
