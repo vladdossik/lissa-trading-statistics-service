@@ -91,11 +91,14 @@ public class ReportUserService implements ReportService {
             if (Objects.isNull(value)) {
                 cell.setCellValue("");
             } else {
-                switch (value) {
-                    case Integer integer -> cell.setCellValue(integer);
-                    case Double d -> cell.setCellValue(d);
-                    case Boolean b -> cell.setCellValue(b);
-                    default -> cell.setCellValue(value.toString());
+                if (value instanceof Integer) {
+                    cell.setCellValue((Integer) value);
+                } else if (value instanceof Double) {
+                    cell.setCellValue((Double) value);
+                } else if (value instanceof Boolean) {
+                    cell.setCellValue((Boolean) value);
+                } else {
+                    cell.setCellValue(value.toString());
                 }
             }
         }
