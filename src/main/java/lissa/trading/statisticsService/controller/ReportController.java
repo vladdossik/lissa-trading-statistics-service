@@ -25,7 +25,7 @@ public class ReportController {
             description = "Отчет успешно сгенерирован"
     )
 
-    @GetMapping("user-pagi")
+    @GetMapping("user")
     public void getUsersReport(Pageable pageable, @RequestParam(required = false) String firstName,
                                @RequestParam(required = false) String secondName,
                                HttpServletResponse response) {
