@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.service.excel.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,12 +20,15 @@ public class ReportController {
     @Qualifier("excelUserService")
     private final ReportService userReportService;
 
-    @Operation(summary = "Сгенерировать отчет по пользователям в формате .xlsx")
+    @Operation(summary = "Сгенерировать отчет по пользователям c фильтрацией и пагинацией в формате .xlsx")
     @ApiResponse(responseCode = "200",
             description = "Отчет успешно сгенерирован"
     )
-    @GetMapping("user")
-    public void getUsersReport(HttpServletResponse response) {
-        userReportService.generateExcelReport(response);
+
+    @GetMapping("user-pagi")
+    public void getUsersReport(Pageable pageable, @RequestParam(required = false) String firstName,
+                               @RequestParam(required = false) String secondName,
+                               HttpServletResponse response) {
+        userReportService.generateExcelReport(pageable, firstName, secondName, response);
     }
 }

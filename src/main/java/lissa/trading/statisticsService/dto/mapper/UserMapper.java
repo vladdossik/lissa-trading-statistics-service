@@ -1,8 +1,8 @@
-package lissa.trading.statisticsService.model.dto.mapper;
+package lissa.trading.statisticsService.dto.mapper;
 
 import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.model.UserJson;
-import lissa.trading.statisticsService.model.dto.UserReportDto;
+import lissa.trading.statisticsService.dto.UserReportDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

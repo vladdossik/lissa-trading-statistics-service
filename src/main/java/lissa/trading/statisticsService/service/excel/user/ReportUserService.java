@@ -3,7 +3,7 @@ package lissa.trading.statisticsService.service.excel.user;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.exception.ExcelCreatingException;
-import lissa.trading.statisticsService.model.dto.UserReportDto;
+import lissa.trading.statisticsService.dto.UserReportDto;
 import lissa.trading.statisticsService.service.excel.ReportService;
 import lissa.trading.statisticsService.service.userReport.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,11 +38,17 @@ public class ReportUserService implements ReportService {
     private final UserService userService;
 
     @Override
-    @Transactional(readOnly = true)
-    public void generateExcelReport(HttpServletResponse response) {
-        String filename = createEncodedFilename("Отчет по пользователям. Дата: ");
-        List<UserReportDto> users = userService.getUsersForReport();
+    public void generateExcelReport(Pageable pageable, String firstName, String lastName,
+                                    HttpServletResponse response) {
 
+        List<UserReportDto> users = userService.getUsersForReport(pageable, firstName,
+                lastName);
+
+        if (CollectionUtils.isEmpty(users)) {
+            throw new ExcelCreatingException("No users found");
+        }
+
+        String filename = createEncodedFilename("Отчет по пользователям. Дата: ");
         try (Workbook workbook = new SXSSFWorkbook();
              ServletOutputStream outputStream = response.getOutputStream()) {
 
