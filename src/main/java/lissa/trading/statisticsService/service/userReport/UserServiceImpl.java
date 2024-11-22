@@ -1,11 +1,9 @@
 package lissa.trading.statisticsService.service.userReport;
 
 import lissa.trading.statisticsService.client.user.feign.UserServiceClient;
-import lissa.trading.statisticsService.dto.UsersIdResponseDto;
 import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.dto.UserReportDto;
 import lissa.trading.statisticsService.dto.mapper.UserMapper;
-import lissa.trading.statisticsService.page.CustomPage;
 import lissa.trading.statisticsService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public List<UserReportDto> getUsersForReport(Pageable pageable, String firstName, String lastName) {
         log.info("Getting users for report with pagination and filters: {}, {}, {}", pageable, firstName, lastName);
         List<UUID> externalIds = getExternalIdsForReport(pageable, firstName, lastName);
-        log.info("We receive: {} external ids", externalIds.size());
+        log.info("Received: {} ids", externalIds.size());
 
         return userRepository.findAllByExternalIdIn(externalIds)
                 .stream()
@@ -66,11 +64,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<UUID> getExternalIdsForReport(Pageable pageable, String firstName, String lastName) {
-        return userServiceClient.getUsersIdWithPaginationAndFilters(pageable, firstName, lastName)
+        return userServiceClient.getUserIdsWithPaginationAndFilters(pageable, firstName, lastName)
                 .getContent()
                 .stream()
-                .flatMap(usersIdResponseDto -> usersIdResponseDto.getExternalIds().stream())
+                .flatMap(userIdsResponseDto -> userIdsResponseDto.getExternalIds().stream())
                 .toList();
-
     }
 }
