@@ -9,7 +9,17 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserReportDto toUserReportDto(User user, UserJson userJson);
+    @Mapping(source = "externalId", target = "externalId")
+    @Mapping(source = "userJson.firstName", target = "firstName")
+    @Mapping(source = "userJson.lastName", target = "lastName")
+    @Mapping(source = "userJson.telegramNickname", target = "telegramNickname")
+    @Mapping(source = "userJson.percentageChangeSinceYesterday", target = "percentageChangeSinceYesterday")
+    @Mapping(source = "userJson.monetaryChangeSinceYesterday", target = "monetaryChangeSinceYesterday")
+    @Mapping(source = "userJson.accountCount", target = "accountCount")
+    @Mapping(source = "userJson.totalBalance", target = "totalBalance")
+    @Mapping(source = "userJson.createdAt", target = "createdAt")
+    @Mapping(source = "userJson.updatedAt", target = "updatedAt")
+    UserReportDto toUserReportDto(User user);
 
     UserJson toUserJson(UserReportDto user);
 

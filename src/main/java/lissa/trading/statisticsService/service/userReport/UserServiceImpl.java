@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findAllByExternalIdIn(externalIds)
                 .stream()
-                .map(user -> userMapper.toUserReportDto(user, user.getUserJson()))
+                .map(userMapper::toUserReportDto)
                 .toList();
     }
 
@@ -64,10 +64,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<UUID> getExternalIdsForReport(Pageable pageable, String firstName, String lastName) {
-        return userServiceClient.getUserIdsWithPaginationAndFilters(pageable, firstName, lastName)
-                .getContent()
-                .stream()
-                .flatMap(userIdsResponseDto -> userIdsResponseDto.getExternalIds().stream())
-                .toList();
+        return userServiceClient.getUserIdsWithPaginationAndFilters(pageable, firstName, lastName);
     }
 }
