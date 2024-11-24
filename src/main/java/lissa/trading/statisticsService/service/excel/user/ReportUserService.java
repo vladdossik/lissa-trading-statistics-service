@@ -4,6 +4,7 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.exception.ExcelCreatingException;
 import lissa.trading.statisticsService.dto.UserReportDto;
+import lissa.trading.statisticsService.exception.UsersNotFoundException;
 import lissa.trading.statisticsService.service.excel.ReportService;
 import lissa.trading.statisticsService.service.userReport.UserService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class ReportUserService implements ReportService {
                 lastName);
 
         if (CollectionUtils.isEmpty(users)) {
-            throw new ExcelCreatingException("No users found");
+            throw new UsersNotFoundException("Users not found");
         }
 
         String filename = createEncodedFilename("Отчет по пользователям. Дата: ");

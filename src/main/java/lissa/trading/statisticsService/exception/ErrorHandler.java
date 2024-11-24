@@ -23,4 +23,11 @@ public class ErrorHandler {
         log.error("User is not found by external id {}", e.getExternalId());
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler(UsersNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUsersNotFoundException(UsersNotFoundException e) {
+        log.error("Users not found");
+        return new ErrorResponse(e.getMessage());
+    }
 }
