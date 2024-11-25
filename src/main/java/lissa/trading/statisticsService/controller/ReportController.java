@@ -27,8 +27,8 @@ public class ReportController {
 
     @GetMapping("user")
     public void getUsersReport(Pageable pageable, @RequestParam(required = false) String firstName,
-                               @RequestParam(required = false) String secondName,
+                               @RequestParam(required = false) String lastName,
                                HttpServletResponse response) {
-        userReportService.generateExcelReport(pageable, firstName, secondName, response);
+        userReportService.generateExcelReport(pageable, firstName, lastName, response);
     }
 }
