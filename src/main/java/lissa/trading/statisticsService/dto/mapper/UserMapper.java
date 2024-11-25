@@ -9,16 +9,16 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(source = "externalId", target = "externalId")
-    @Mapping(source = "userJson.firstName", target = "firstName")
-    @Mapping(source = "userJson.lastName", target = "lastName")
-    @Mapping(source = "userJson.telegramNickname", target = "telegramNickname")
-    @Mapping(source = "userJson.percentageChangeSinceYesterday", target = "percentageChangeSinceYesterday")
-    @Mapping(source = "userJson.monetaryChangeSinceYesterday", target = "monetaryChangeSinceYesterday")
-    @Mapping(source = "userJson.accountCount", target = "accountCount")
-    @Mapping(source = "userJson.totalBalance", target = "totalBalance")
-    @Mapping(source = "userJson.createdAt", target = "createdAt")
-    @Mapping(source = "userJson.updatedAt", target = "updatedAt")
+    @Mapping(target = "externalId", source = "externalId")
+    @Mapping(target = "firstName", source = "userJson.firstName")
+    @Mapping(target = "lastName", source = "userJson.lastName")
+    @Mapping(target = "telegramNickname", source = "userJson.telegramNickname")
+    @Mapping(target = "percentageChangeSinceYesterday", source = "userJson.percentageChangeSinceYesterday")
+    @Mapping(target = "monetaryChangeSinceYesterday", source = "userJson.monetaryChangeSinceYesterday")
+    @Mapping(target = "accountCount", source = "userJson.accountCount")
+    @Mapping(target = "totalBalance", source = "userJson.totalBalance")
+    @Mapping(target = "createdAt", source = "userJson.createdAt")
+    @Mapping(target = "updatedAt", source = "userJson.updatedAt")
     UserReportDto toUserReportDto(User user);
 
     UserJson toUserJson(UserReportDto user);
