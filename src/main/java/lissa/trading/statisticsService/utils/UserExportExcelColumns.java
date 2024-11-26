@@ -1,6 +1,6 @@
 package lissa.trading.statisticsService.utils;
 
-import lissa.trading.statisticsService.model.dto.UserReportDto;
+import lissa.trading.statisticsService.dto.UserReportDto;
 import lissa.trading.statisticsService.utils.columns.ExportColumn;
 import lissa.trading.statisticsService.utils.columns.NumericColumn;
 import lissa.trading.statisticsService.utils.columns.TextColumn;

@@ -1,6 +1,6 @@
 package lissa.trading.statisticsService.service.consumer;
 
-import lissa.trading.statisticsService.model.dto.UserReportDto;
+import lissa.trading.statisticsService.dto.UserReportDto;
 import lissa.trading.statisticsService.service.userReport.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

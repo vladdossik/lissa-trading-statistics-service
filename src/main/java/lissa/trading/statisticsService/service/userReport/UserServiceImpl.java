@@ -1,11 +1,13 @@
 package lissa.trading.statisticsService.service.userReport;
 
+import lissa.trading.statisticsService.client.user.feign.UserServiceClient;
 import lissa.trading.statisticsService.model.User;
-import lissa.trading.statisticsService.model.dto.UserReportDto;
-import lissa.trading.statisticsService.model.dto.mapper.UserMapper;
+import lissa.trading.statisticsService.dto.UserReportDto;
+import lissa.trading.statisticsService.dto.mapper.UserMapper;
 import lissa.trading.statisticsService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +24,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserServiceClient userServiceClient;
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserReportDto> getUsersForReport() {
-        log.info("Getting users for report");
-        return userRepository.findAll().stream()
-                .map(user -> userMapper.toUserReportDto(user, user.getUserJson()))
+    public List<UserReportDto> getUsersForReport(Pageable pageable, String firstName, String lastName) {
+        log.info("Getting users for report with pagination and filters: {}, {}, {}", pageable, firstName, lastName);
+        List<UUID> externalIds = getExternalIdsForReport(pageable, firstName, lastName);
+        log.info("Received: {} ids", externalIds.size());
+
+        return userRepository.findAllByExternalIdIn(externalIds)
+                .stream()
+                .map(userMapper::toUserReportDto)
                 .toList();
     }
 
@@ -54,5 +61,9 @@ public class UserServiceImpl implements UserService {
 
         userRepository.saveAll(usersToSave);
         log.info("Successfully received and saved {} users", usersToSave.size());
+    }
+
+    private List<UUID> getExternalIdsForReport(Pageable pageable, String firstName, String lastName) {
+        return userServiceClient.getUserIdsWithPaginationAndFilters(pageable, firstName, lastName);
     }
 }
