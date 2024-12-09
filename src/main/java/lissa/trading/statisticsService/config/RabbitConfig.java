@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    @Value("${integration.rabbit.user-service.user-queue}")
+    @Value("${integration.rabbit.inbound.user-service.queue}")
     private String userStatsQueue;
 
     @Bean
