@@ -1,4 +1,4 @@
-package lissa.trading.statisticsService.dto.mapper;
+package lissa.trading.statisticsService.mapper;
 
 import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.model.UserJson;
