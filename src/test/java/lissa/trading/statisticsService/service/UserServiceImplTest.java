@@ -1,12 +1,11 @@
-package lissa.trading.statisticsService.repository.service;
+package lissa.trading.statisticsService.service;
 
+import lissa.trading.statisticsService.repository.UserRepository;
 import lissa.trading.statisticsService.client.user.feign.UserServiceClient;
 import lissa.trading.statisticsService.dto.UserReportDto;
 import lissa.trading.statisticsService.mapper.UserMapper;
 import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.model.UserJson;
-import lissa.trading.statisticsService.repository.AbstractInitialization;
-import lissa.trading.statisticsService.repository.UserRepository;
 import lissa.trading.statisticsService.service.userReport.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplTest extends AbstractInitialization {
+public class UserServiceImplTest extends AbstractServiceInitialization {
 
     @Mock
     private UserRepository userRepository;

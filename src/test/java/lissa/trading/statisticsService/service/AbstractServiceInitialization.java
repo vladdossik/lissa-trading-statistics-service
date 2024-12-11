@@ -1,4 +1,4 @@
-package lissa.trading.statisticsService.repository;
+package lissa.trading.statisticsService.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class AbstractInitialization {
+public abstract class AbstractServiceInitialization {
 
     protected static List<UserReportDto> userReportDtos = new ArrayList<>();
     protected static List<User> users = new ArrayList<>();

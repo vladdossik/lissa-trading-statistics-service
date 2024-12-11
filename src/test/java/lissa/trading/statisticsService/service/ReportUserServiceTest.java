@@ -1,10 +1,9 @@
-package lissa.trading.statisticsService.repository.service;
+package lissa.trading.statisticsService.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lissa.trading.statisticsService.exception.ExcelCreatingException;
 import lissa.trading.statisticsService.exception.UsersNotFoundException;
-import lissa.trading.statisticsService.repository.AbstractInitialization;
 import lissa.trading.statisticsService.service.excel.user.ReportUserService;
 import lissa.trading.statisticsService.service.userReport.UserService;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReportUserServiceTest extends AbstractInitialization {
+public class ReportUserServiceTest extends AbstractServiceInitialization {
 
     @Mock
     private UserService userService;
