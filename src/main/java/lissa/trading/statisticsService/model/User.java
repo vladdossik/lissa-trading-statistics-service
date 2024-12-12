@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import java.util.UUID;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "users")
+@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -28,10 +31,12 @@ public class User {
     private Long id;
 
     @Column(name = "external_id")
+    @NonNull
     private UUID externalId;
 
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb", name = "user_json")
+    @NonNull
     private UserJson userJson;
 
 }

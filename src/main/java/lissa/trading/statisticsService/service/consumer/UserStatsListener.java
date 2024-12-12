@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserStatsConsumer implements StatsConsumer<UserReportDto> {
+public class UserStatsListener implements StatsListener<UserReportDto> {
 
     private final UserService userService;
 
-    @RabbitListener(queues = "${integration.rabbit.user-service.user-queue}")
+    @RabbitListener(queues = "${integration.rabbit.inbound.user-service.queue}")
     @Transactional
     public void receiveUsersData(List<UserReportDto> users) {
         if (CollectionUtils.isEmpty(users)) {

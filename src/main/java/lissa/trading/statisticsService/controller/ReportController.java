@@ -24,7 +24,6 @@ public class ReportController {
     @ApiResponse(responseCode = "200",
             description = "Отчет успешно сгенерирован"
     )
-
     @GetMapping("user")
     public void getUsersReport(Pageable pageable, @RequestParam(required = false) String firstName,
                                @RequestParam(required = false) String lastName,

@@ -1,17 +1,19 @@
 package lissa.trading.statisticsService.service.userReport;
 
 import lissa.trading.statisticsService.client.user.feign.UserServiceClient;
-import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.dto.UserReportDto;
-import lissa.trading.statisticsService.dto.mapper.UserMapper;
+import lissa.trading.statisticsService.mapper.UserMapper;
+import lissa.trading.statisticsService.model.User;
 import lissa.trading.statisticsService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +33,12 @@ public class UserServiceImpl implements UserService {
     public List<UserReportDto> getUsersForReport(Pageable pageable, String firstName, String lastName) {
         log.info("Getting users for report with pagination and filters: {}, {}, {}", pageable, firstName, lastName);
         List<UUID> externalIds = getExternalIdsForReport(pageable, firstName, lastName);
+
+        if (CollectionUtils.isEmpty(externalIds)) {
+            log.info("Nothing found by firstName: {} and lastName: {}", firstName, lastName);
+            return Collections.emptyList();
+        }
+
         log.info("Received: {} ids", externalIds.size());
 
         return userRepository.findAllByExternalIdIn(externalIds)
