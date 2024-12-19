@@ -28,8 +28,7 @@ spring:
 
 security:
   internal:
-    outbound:
-      token: 4sy0dhDsAKbf9pc2yjgu5k_KA7lXDsXBo-1P9Q3C8bg
+    token: c3RhdGlzdGljcy1pbnRlcm5hbC1rZXk=
 
 integration:
   rabbit:
