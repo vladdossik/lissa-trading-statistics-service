@@ -28,7 +28,7 @@ spring:
 
 security:
   internal:
-    token: c3RhdGlzdGljcy1pbnRlcm5hbC1rZXk=
+    token: YzNSaGRHbHpkR2xqY3kxcGJuUmxjbTVoYkMxclpYaz0K
 
 integration:
   rabbit:
