@@ -37,3 +37,4 @@ integration:
         queue: user-stats-queue
   rest:
     user-service-url: http://localhost:8080
+    auth-service-url: http://localhost:8081
