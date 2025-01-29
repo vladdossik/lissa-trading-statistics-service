@@ -18,9 +18,9 @@ import java.util.UUID;
 
 public abstract class AbstractServiceInitialization {
 
-    protected static List<UserReportDto> userReportDtos = new ArrayList<>();
-    protected static List<User> users = new ArrayList<>();
-    protected static List<UUID> uuids = new ArrayList<>();
+    protected static List<UserReportDto> userReportDtos;
+    protected static List<User> users;
+    protected static List<UUID> uuids;
     protected static final Pageable PAGEABLE = Pageable.unpaged();
     protected List<User> existingUsers = new ArrayList<>();
     private static final Random RANDOM = new Random();
@@ -28,6 +28,9 @@ public abstract class AbstractServiceInitialization {
 
     @BeforeAll
     public static void beforeAll() {
+        userReportDtos = new ArrayList<>();
+        users = new ArrayList<>();
+        uuids = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             createFullUserReportDto();
             createUsers();
